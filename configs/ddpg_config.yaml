@@ -1,0 +1,85 @@
+# DDPG Configuration for Car Racing
+
+# Environment settings
+env_name: "CarRacing-v3"
+render_mode: "rgb_array"  # Use "human" for visualization during training
+seed: 42
+
+# Network architecture
+actor_architecture:
+  conv_layers:
+    - [32, 8, 4]  # [out_channels, kernel_size, stride]
+    - [64, 4, 2]
+    - [64, 3, 1]
+  fc_hidden: 512
+  activation: "relu"
+
+critic_architecture:
+  conv_layers:
+    - [32, 8, 4]
+    - [64, 4, 2]
+    - [64, 3, 1]
+  fc_hidden: 512
+  action_fc: 64
+  activation: "relu"
+
+# Training hyperparameters
+training:
+  num_episodes: 2000
+  max_steps_per_episode: 1000
+  batch_size: 128
+  replay_buffer_size: 500000
+  learning_starts: 10000  # Random steps before training
+  train_frequency: 1  # Train every N steps
+  gradient_steps: 1  # Number of gradient steps per training
+
+# Learning rates
+learning_rates:
+  actor: 0.0001
+  critic: 0.001
+
+# DDPG specific
+ddpg:
+  gamma: 0.99  # Discount factor
+  tau: 0.005  # Soft update coefficient
+
+  # Exploration noise (Ornstein-Uhlenbeck)
+  noise:
+    type: "ou"  # Ornstein-Uhlenbeck
+    theta: 0.15
+    sigma: 0.2
+    dt: 0.01
+
+  # Gradient clipping
+  grad_clip: 1.0
+
+# Preprocessing
+preprocessing:
+  grayscale: false  # Keep RGB
+  normalize: true  # Normalize to [0, 1]
+  frame_skip: 0  # Number of frames to skip (0 = no skip)
+  frame_stack: 1  # Number of frames to stack
+
+# Reward shaping (optional)
+reward_shaping:
+  enabled: false
+  negative_reward_penalty: 1.0  # Multiply negative rewards
+  speed_bonus: 0.0  # Bonus for maintaining speed
+
+# Checkpointing
+checkpoint:
+  save_frequency: 50  # Save every N episodes
+  save_dir: "models/"
+  keep_best: true  # Keep best model separately
+
+# Logging
+logging:
+  log_frequency: 10  # Log every N episodes
+  tensorboard: true
+  log_dir: "results/logs/"
+
+# Evaluation
+evaluation:
+  eval_frequency: 100  # Evaluate every N episodes
+  num_eval_episodes: 5
+  render_eval: false

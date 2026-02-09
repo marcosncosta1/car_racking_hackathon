@@ -1,0 +1,90 @@
+# DQN Configuration for Car Racing
+
+# Environment settings
+env_name: "CarRacing-v3"
+render_mode: "rgb_array"
+seed: 42
+
+# Action discretization
+action_space:
+  type: "discrete"
+  # Simplified action set (9 common actions)
+  actions:
+    - [0.0, 0.0, 0.0]    # No-op
+    - [-1.0, 0.0, 0.0]   # Hard left
+    - [-0.5, 0.0, 0.0]   # Soft left
+    - [0.0, 1.0, 0.0]    # Gas
+    - [0.0, 0.0, 0.8]    # Brake
+    - [-1.0, 0.5, 0.0]   # Left + Gas
+    - [1.0, 0.5, 0.0]    # Right + Gas
+    - [0.5, 0.0, 0.0]    # Soft right
+    - [1.0, 0.0, 0.0]    # Hard right
+
+# Network architecture
+network_architecture:
+  conv_layers:
+    - [32, 8, 4]  # [out_channels, kernel_size, stride]
+    - [64, 4, 2]
+    - [64, 3, 3]
+  fc_hidden: 512
+  activation: "relu"
+  dueling: false  # Use dueling DQN architecture
+
+# Training hyperparameters
+training:
+  num_episodes: 2000
+  max_steps_per_episode: 1000
+  batch_size: 64
+  replay_buffer_size: 100000
+  learning_starts: 5000
+  train_frequency: 4  # Train every 4 steps
+  target_update_frequency: 1000  # Update target network every N steps
+
+# Learning rate
+learning_rate: 0.0001
+
+# DQN specific
+dqn:
+  gamma: 0.99
+
+  # Exploration
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay_steps: 100000
+
+  # Double DQN
+  double_dqn: true
+
+  # Gradient clipping
+  grad_clip: 10.0
+
+# Preprocessing
+preprocessing:
+  grayscale: true  # Convert to grayscale for DQN
+  normalize: true
+  frame_skip: 0
+  frame_stack: 4  # Stack 4 frames for temporal information
+
+# Reward shaping
+reward_shaping:
+  enabled: false
+  negative_reward_penalty: 1.0
+  clip_reward: false  # Clip rewards to [-1, 1]
+
+# Checkpointing
+checkpoint:
+  save_frequency: 50
+  save_dir: "models/"
+  keep_best: true
+
+# Logging
+logging:
+  log_frequency: 10
+  tensorboard: true
+  log_dir: "results/logs/"
+
+# Evaluation
+evaluation:
+  eval_frequency: 100
+  num_eval_episodes: 5
+  render_eval: false
