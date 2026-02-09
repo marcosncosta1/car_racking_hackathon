@@ -3,11 +3,18 @@
 Loads a trained model and evaluates its performance.
 """
 
+import sys
+from pathlib import Path
+
+# Add src directory to path for imports
+src_dir = Path(__file__).parent
+if str(src_dir) not in sys.path:
+    sys.path.insert(0, str(src_dir))
+
 import argparse
 import gymnasium as gym
 import torch
 import numpy as np
-from pathlib import Path
 
 from utils.config_loader import load_config
 from utils.preprocessing import FrameProcessor
@@ -95,7 +102,7 @@ def evaluate(model_path, num_episodes=10, render=False, record=False, seed=42):
         while not done:
             # Select action (greedy)
             action_idx = agent.select_action(state, eval_mode=True)
-            action = discrete_actions[action_idx]
+            action = np.array(discrete_actions[action_idx], dtype=np.float32)
 
             # Step environment
             next_state, reward, terminated, truncated, _ = env.step(action)

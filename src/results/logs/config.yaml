@@ -1,0 +1,85 @@
+actions:
+- - 0.0
+  - 0.0
+  - 0.0
+- - -1.0
+  - 0.0
+  - 0.0
+- - -0.5
+  - 0.0
+  - 0.0
+- - 0.0
+  - 1.0
+  - 0.0
+- - 0.0
+  - 0.0
+  - 0.8
+- - -1.0
+  - 0.5
+  - 0.0
+- - 1.0
+  - 0.5
+  - 0.0
+- - 0.5
+  - 0.0
+  - 0.0
+- - 1.0
+  - 0.0
+  - 0.0
+agent:
+  algorithm: dqn
+  batch_size: 64
+  double_dqn: true
+  epsilon_decay_steps: 100000
+  epsilon_end: 0.01
+  epsilon_start: 1.0
+  gamma: 0.99
+  grad_clip: 10.0
+  learning_rate: 0.0001
+  learning_starts: 5000
+  replay_buffer_size: 100000
+  target_update_frequency: 1000
+  train_frequency: 4
+env:
+  name: CarRacing-v3
+  num_actions: 9
+  render_mode: rgb_array
+logging:
+  console: true
+  metrics_file: results/metrics.csv
+  save_metrics: true
+  tensorboard: true
+network:
+  activation: relu
+  conv_layers:
+  - filters: 32
+    kernel_size: 8
+    stride: 4
+  - filters: 64
+    kernel_size: 4
+    stride: 2
+  - filters: 64
+    kernel_size: 3
+    stride: 3
+  dueling: false
+  fc_layers:
+  - 512
+  type: cnn
+preprocessing:
+  frame_size:
+  - 96
+  - 96
+  frame_stack: 4
+  grayscale: true
+  normalize: true
+training:
+  checkpoint_dir: models/
+  device: auto
+  eval_episodes: 5
+  eval_frequency: 100
+  log_dir: results/logs/
+  max_steps_per_episode: 1000
+  save_frequency: 50
+  seed: 42
+  total_episodes: 2000
+  video_dir: results/videos

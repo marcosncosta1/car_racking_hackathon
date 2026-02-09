@@ -39,18 +39,29 @@ def _validate_config(config):
     Raises:
         ValueError: If required fields are missing
     """
-    required_sections = ['env', 'preprocessing', 'network', 'agent', 'training']
+    # Check for either nested format (after adaptation) or flat format (original)
+    # Nested format: 'env', 'preprocessing', 'network', 'agent', 'training'
+    # Flat format: 'env_name', 'preprocessing', 'network_architecture', 'dqn', 'training'
 
-    for section in required_sections:
-        if section not in config:
-            raise ValueError(f"Missing required config section: {section}")
+    is_nested = 'env' in config and 'agent' in config
+    is_flat = 'env_name' in config and 'dqn' in config
 
-    # Validate specific fields
-    if 'num_actions' not in config['env']:
-        raise ValueError("Missing 'num_actions' in env config")
+    if not (is_nested or is_flat):
+        raise ValueError("Config must have either nested format (env, agent) or flat format (env_name, dqn)")
 
-    if 'gamma' not in config['agent']:
-        raise ValueError("Missing 'gamma' in agent config")
+    # Validate flat format (original)
+    if is_flat:
+        required_flat = ['env_name', 'preprocessing', 'network_architecture', 'dqn', 'training']
+        for section in required_flat:
+            if section not in config:
+                raise ValueError(f"Missing required config section: {section}")
+
+    # Validate nested format (adapted)
+    if is_nested:
+        required_nested = ['env', 'preprocessing', 'network', 'agent', 'training']
+        for section in required_nested:
+            if section not in config:
+                raise ValueError(f"Missing required config section: {section}")
 
 
 def save_config(config, save_path):

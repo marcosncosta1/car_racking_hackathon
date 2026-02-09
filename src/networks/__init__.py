@@ -1,5 +1,5 @@
 """Neural network architectures for RL agents."""
 
-from .q_network import QNetwork
+from networks.q_network import QNetwork
 
 __all__ = ['QNetwork']

@@ -136,6 +136,7 @@ def test_config():
     print("\nTesting config loading...")
 
     from utils.config_loader import load_config
+    from utils.config_adapter import adapt_config
 
     config_path = Path(__file__).parent.parent / 'configs' / 'dqn_config.yaml'
 
@@ -143,9 +144,13 @@ def test_config():
         print(f"⚠ Config file not found: {config_path}")
         return
 
+    # Load flat config
     config = load_config(config_path)
 
-    # Check required sections
+    # Adapt to nested format
+    config = adapt_config(config)
+
+    # Check required sections (nested format)
     required = ['env', 'preprocessing', 'network', 'agent', 'training']
     for section in required:
         assert section in config, f"Missing section: {section}"

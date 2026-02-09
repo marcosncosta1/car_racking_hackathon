@@ -11,8 +11,8 @@ import numpy as np
 import random
 from pathlib import Path
 
-from ..networks.q_network import QNetwork
-from ..utils.replay_buffer import ReplayBuffer
+from networks.q_network import QNetwork
+from utils.replay_buffer import ReplayBuffer
 
 
 class DQNAgent:

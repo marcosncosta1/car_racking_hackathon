@@ -1,5 +1,5 @@
 """RL agent implementations."""
 
-from .dqn_agent import DQNAgent
+from agents.dqn_agent import DQNAgent
 
 __all__ = ['DQNAgent']

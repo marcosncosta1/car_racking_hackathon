@@ -109,7 +109,7 @@ class QNetwork(nn.Module):
 
         # Convolutional layers
         x = self.conv(state)
-        x = x.view(x.size(0), -1)  # Flatten
+        x = x.reshape(x.size(0), -1)  # Flatten
 
         if self.dueling:
             # Dueling architecture

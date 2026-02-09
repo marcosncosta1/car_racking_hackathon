@@ -3,11 +3,18 @@
 Trains a DQN agent on the Car Racing environment.
 """
 
+import sys
+from pathlib import Path
+
+# Add src directory to path for imports
+src_dir = Path(__file__).parent
+if str(src_dir) not in sys.path:
+    sys.path.insert(0, str(src_dir))
+
 import argparse
 import gymnasium as gym
 import torch
 import numpy as np
-from pathlib import Path
 from tqdm import tqdm
 
 from utils.config_loader import load_config, save_config
@@ -55,7 +62,7 @@ def evaluate_agent(env, agent, processor, discrete_actions, num_episodes=5):
 
         while not done:
             action_idx = agent.select_action(state, eval_mode=True)
-            action = discrete_actions[action_idx]
+            action = np.array(discrete_actions[action_idx], dtype=np.float32)
             next_state, reward, terminated, truncated, _ = env.step(action)
             done = terminated or truncated
 
@@ -161,7 +168,7 @@ def train(config_path, resume_path=None):
         for step in range(max_steps):
             # Select and perform action
             action_idx = agent.select_action(state)
-            action = discrete_actions[action_idx]
+            action = np.array(discrete_actions[action_idx], dtype=np.float32)
 
             next_state, reward, terminated, truncated, _ = env.step(action)
             done = terminated or truncated
