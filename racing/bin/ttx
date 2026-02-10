@@ -1,0 +1,8 @@
+#!/bin/sh
+'''exec' "/Users/marcosncosta/Library/Mobile Documents/com~apple~CloudDocs/DesktopiCloud/ZHAW/1st_Semester_Fall_2025/EVA_MachineIntelligence/car_racing_hackathon/racing/bin/python" "$0" "$@"
+' '''
+import sys
+from fontTools.ttx import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())

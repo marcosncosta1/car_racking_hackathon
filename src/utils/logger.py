@@ -93,8 +93,21 @@ class Logger:
         if self.csv_file is None:
             self.csv_fieldnames = list(row.keys())
             self.csv_file = open(self.csv_path, 'w', newline='')
-            self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=self.csv_fieldnames)
+            self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=self.csv_fieldnames, restval='')
             self.csv_writer.writeheader()
+
+        # Handle new keys (e.g. eval metrics appearing later)
+        new_keys = [k for k in row.keys() if k not in self.csv_fieldnames]
+        if new_keys:
+            self.csv_fieldnames.extend(new_keys)
+            self.csv_file.close()
+            existing_rows = []
+            with open(self.csv_path, 'r', newline='') as f:
+                existing_rows = list(csv.DictReader(f))
+            self.csv_file = open(self.csv_path, 'w', newline='')
+            self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=self.csv_fieldnames, restval='')
+            self.csv_writer.writeheader()
+            self.csv_writer.writerows(existing_rows)
 
         # Write row
         self.csv_writer.writerow(row)
